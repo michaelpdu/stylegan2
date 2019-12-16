@@ -62,6 +62,8 @@ def _run_cmd(cmd):
 
 def _prepare_nvcc_cli(opts):
     cmd = 'nvcc ' + opts.strip()
+    cmd += ' --std c++11'
+    cmd += ' -DNDEBUG'
     cmd += ' --disable-warnings'
     cmd += ' --include-path "%s"' % tf.sysconfig.get_include()
     cmd += ' --include-path "%s"' % os.path.join(tf.sysconfig.get_include(), 'external', 'protobuf_archive', 'src')
