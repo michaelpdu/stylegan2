@@ -33,7 +33,7 @@ _valid_configs = [
 
 #----------------------------------------------------------------------------
 
-def run(dataset, data_dir, result_dir, config_id, num_gpus, total_kimg, gamma, mirror_augment, metrics):
+def run(dataset, data_dir, result_dir, config_id, num_gpus, total_kimg, gamma, mirror_augment, metrics, pkl_path, resume_kimg):
     train     = EasyDict(run_func_name='training.training_loop.training_loop') # Options for training loop.
     G         = EasyDict(func_name='training.networks_stylegan2.G_main')       # Options for generator network.
     D         = EasyDict(func_name='training.networks_stylegan2.D_stylegan2')  # Options for discriminator network.
@@ -50,6 +50,14 @@ def run(dataset, data_dir, result_dir, config_id, num_gpus, total_kimg, gamma, m
     train.total_kimg = total_kimg
     train.mirror_augment = mirror_augment
     train.image_snapshot_ticks = train.network_snapshot_ticks = 10
+    if pkl_path == '':
+        print('pickle path is empty string.')
+        train.resume_pkl = None
+        train.resume_kimg = 0
+    else:
+        print('pickle path:', pkl_path)
+        train.resume_pkl = pkl_path
+        train.resume_kimg = resume_kimg
     sched.G_lrate_base = sched.D_lrate_base = 0.002
     sched.minibatch_size_base = 32
     sched.minibatch_gpu_base = 4
@@ -69,7 +77,7 @@ def run(dataset, data_dir, result_dir, config_id, num_gpus, total_kimg, gamma, m
 
     # Configs A-E: Shrink networks to match original StyleGAN.
     if config_id != 'config-f':
-        G.fmap_base = D.fmap_base = 8 << 10
+        G.fmap_base = D.fmap_base = 8 << 10 # 8192
 
     # Config E: Set gamma to 100 and override G & D architecture.
     if config_id.startswith('config-e'):
@@ -168,6 +176,8 @@ def main():
     parser.add_argument('--gamma', help='R1 regularization weight (default is config dependent)', default=None, type=float)
     parser.add_argument('--mirror-augment', help='Mirror augment (default: %(default)s)', default=False, metavar='BOOL', type=_str_to_bool)
     parser.add_argument('--metrics', help='Comma-separated list of metrics or "none" (default: %(default)s)', default='fid50k', type=_parse_comma_sep)
+    parser.add_argument('--pkl-path', help='Path to network pickle file', default='', type=str)
+    parser.add_argument('--resume_kimg', help='Number of resumed kimg', default=15000, type=int)
 
     args = parser.parse_args()
 
@@ -183,7 +193,7 @@ def main():
         if metric not in metric_defaults:
             print ('Error: unknown metric \'%s\'' % metric)
             sys.exit(1)
-
+    
     run(**vars(args))
 
 #----------------------------------------------------------------------------
