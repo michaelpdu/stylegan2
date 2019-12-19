@@ -23,6 +23,7 @@ def open_file_or_url(file_or_url):
     return open(file_or_url, 'rb')
 
 def load_pkl(file_or_url):
+    print('Loading pkl:', file_or_url)
     with open_file_or_url(file_or_url) as file:
         return pickle.load(file, encoding='latin1')
 
