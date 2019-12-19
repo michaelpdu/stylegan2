@@ -13,6 +13,9 @@ import PIL.Image
 import PIL.ImageFont
 import dnnlib
 
+# fid_pkl_url = 'https://drive.google.com/uc?id=1MzTY44rLToO5APn8TZmfR7_ENSe5aZUn'
+fid_pkl_url = 'file:///root/github/stylegan2/model/inception_v3_features.pkl'
+
 #----------------------------------------------------------------------------
 # Convenience wrappers for pickle that are able to load data produced by
 # older versions of the code, and from external URLs.
