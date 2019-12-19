@@ -14,14 +14,14 @@ import PIL.ImageFont
 import dnnlib
 
 # fid_pkl_url = 'https://drive.google.com/uc?id=1MzTY44rLToO5APn8TZmfR7_ENSe5aZUn'
-fid_pkl_url = 'file:///root/github/stylegan2/model/inception_v3_features.pkl'
+fid_pkl_url = 'file:///model/inception_v3_features.pkl'
 
 #----------------------------------------------------------------------------
 # Convenience wrappers for pickle that are able to load data produced by
 # older versions of the code, and from external URLs.
 
 def open_file_or_url(file_or_url):
-    if dnnlib.util.is_url(file_or_url):
+    if dnnlib.util.is_url(file_or_url, allow_file_urls=True):
         return dnnlib.util.open_url(file_or_url, cache_dir='.stylegan2-cache')
     return open(file_or_url, 'rb')
 
