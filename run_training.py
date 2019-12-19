@@ -151,6 +151,9 @@ _examples = '''examples:
   # Train StyleGAN2 using the FFHQ dataset
   python %(prog)s --num-gpus=8 --data-dir=~/datasets --config=config-f --dataset=ffhq --mirror-augment=true
 
+  # Fine-tunning StyleGAN2 using the aisan face dataset
+  python3 %(prog)s --num-gpus=4 --data-dir=/root/data --dataset=yellow-real --config=config-f --mirror-augment=true --pkl-path=./model/stylegan2-ffhq-config-f.pkl --resume_kimg=10000
+
 valid configs:
 
   ''' + ', '.join(_valid_configs) + '''
